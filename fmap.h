@@ -14,6 +14,7 @@ typedef struct
 {
 	int LARGEUR_TILE,HAUTEUR_TILE;
 	int nbtilesX,nbtilesY;
+        int xscroll, yscroll;
 	SDL_Surface* tileset;
 	TileProp* props;
 	Uint16** schema;

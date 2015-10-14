@@ -2,7 +2,7 @@
 tileset1.bmp 
 16 16
 tile0: vide 
-tile1: vide
+tile1: mur
 tile2: vide
 tile3: vide
 tile4: vide

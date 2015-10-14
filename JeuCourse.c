@@ -1,4 +1,4 @@
-#include "fmap.h"
+
 #include "fevent.h"
 #include "fsprite.h" 
 
@@ -16,7 +16,7 @@ void RecupererVecteur(Input* in, int* vx, int*vy)
     *vx = vitesse;
 }
 
-void Evolue(Input* in, Sprite* voiture)
+void Evolue(Input* in, SDL_Rect* mur, Sprite* voiture)
 {
   int vx, vy;
   RecupererVecteur(in, &vx, &vy);
@@ -25,6 +25,7 @@ void Evolue(Input* in, Sprite* voiture)
 
 int main(int argc,char** argv)
 {
+  SDL_Rect mur;
 	SDL_Surface* screen;
 	Sprite* perso;
 	Input in;
@@ -38,7 +39,7 @@ int main(int argc,char** argv)
 	while(!in.key[SDLK_ESCAPE])
 	{
 		UpdateEvents(&in);
-		Evolue(&in,perso);
+		Evolue(&in,&mur,perso);
 		AfficherSprite(perso,screen);
 		SDL_Flip(screen);
 		SDL_Delay(5);

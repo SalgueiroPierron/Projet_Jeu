@@ -1,12 +1,14 @@
 #include <SDL.h>
+#include "fmap.h"
 
 #pragma comment (lib,"sdl.lib")
 #pragma comment (lib,"sdlmain.lib")
 
 typedef struct
 {
-  SDL_Rect position;
-}Sprite;
+    Map* m;
+    int x,y,w,h;
+} Sprite;
 
 Sprite* InitialiserSprite(Sint16 x, Sint16 y, Sint16 w, Sint16 h);
 void LibereSprite(Sprite*);
