@@ -1,5 +1,6 @@
 #include "fevent.h"
 #include "fmap.h"
+#include "course.h"
 #include <math.h>
 
 #define LARGEUR_FENETRE 1200
@@ -40,8 +41,7 @@ void RecupererVecteur(Input* in, int* vx, int*vy)
   int rotation = 0;
   *vx = *vy =0;
   if (in->key[SDLK_UP]){
-    *vy = cos(rotation*(PI/180))*vitesse;
-    *vx = sin(rotation*(PI/180))*vitesse;
+    *vy = vitesse;
   }
   if (in->key[SDLK_DOWN])
     *vy = vitesse;
@@ -106,6 +106,7 @@ void AfficherPerso(SDL_Rect* perso,SDL_Surface* screen,int xscroll,int yscroll)
 	positionsurecran.y -= yscroll;
 	SDL_FillRect(screen,&positionsurecran,0x00FF00); 
 }
+
 
 int main(int argc,char** argv)
 {
