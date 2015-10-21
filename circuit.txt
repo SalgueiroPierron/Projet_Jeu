@@ -1,5 +1,5 @@
 #tileset 
-tileset1.bmp 
+tileset2.bmp 
 16 16
 tile0: vide 
 tile1: mur

@@ -1,17 +1,10 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <time.h>
-#ifdef WIN32
-#include <windows.h>
-#endif
-#include <SDL.h>
 #include "fevent.h"
 
 void UpdateEvents(Input* in)
 {
 	SDL_Event event;
-        in->mousebuttons[SDL_BUTTON_WHEELUP] = 0;
-        in->mousebuttons[SDL_BUTTON_WHEELDOWN] = 0;
+	in->mousebuttons[SDL_BUTTON_WHEELUP] = 0;
+	in->mousebuttons[SDL_BUTTON_WHEELDOWN] = 0;
 	while(SDL_PollEvent(&event))
 	{
 		switch (event.type)
@@ -32,8 +25,8 @@ void UpdateEvents(Input* in)
 			in->mousebuttons[event.button.button]=1;
 			break;
 		case SDL_MOUSEBUTTONUP:
-                        if (event.button.button!=SDL_BUTTON_WHEELUP && event.button.button!=SDL_BUTTON_WHEELDOWN)
-			   in->mousebuttons[event.button.button]=0;
+			if (event.button.button!=SDL_BUTTON_WHEELUP && event.button.button!=SDL_BUTTON_WHEELDOWN)
+				in->mousebuttons[event.button.button]=0;
 			break;
 		case SDL_QUIT:
 			in->quit = 1;
@@ -44,10 +37,7 @@ void UpdateEvents(Input* in)
 	}
 }
 
-
-
-int InitSprites(Input* in)
+void InitEvents(Input* in)
 {
-	int i;
-	return 0;
+	memset(in,0,sizeof(Input));
 }

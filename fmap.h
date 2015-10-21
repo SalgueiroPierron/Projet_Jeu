@@ -19,8 +19,10 @@ typedef struct
 	TileProp* props;
 	Uint16** schema;
 	int nbtiles_largeur_monde,nbtiles_hauteur_monde;
+  int largeur_fenetre, hauteur_fenetre;
 } Map;
 
-Map* ChargerMap(const char* fic);
+Map* ChargerMap(const char* fic, int larg, int haut);
 int AfficherMap(Map* m,SDL_Surface* screen);
 int LibererMap(Map* m);
+int CollisionDecor(Map* carte, SDL_Rect* perso);
