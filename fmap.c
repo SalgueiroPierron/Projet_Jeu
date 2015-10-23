@@ -1,6 +1,6 @@
+#include "fmap.h"
 #define _CRT_SECURE_NO_DEPRECATE   // pour visual C++ qui met des warning pour fopen et fscanf : aucun effet negatif pour les autres compilos.
 #include <string.h>
-#include "fmap.h"
 
 #define CACHE_SIZE 5000
 
