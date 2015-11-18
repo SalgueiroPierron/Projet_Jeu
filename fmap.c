@@ -1,6 +1,6 @@
-#include "fmap.h"
 #define _CRT_SECURE_NO_DEPRECATE   // pour visual C++ qui met des warning pour fopen et fscanf : aucun effet negatif pour les autres compilos.
 #include <string.h>
+#include "main.h"
 
 #define CACHE_SIZE 5000
 
@@ -31,7 +31,7 @@ void ChargerMap_tileset(FILE* F,Map* m)
 	fscanf(F,"%d %d",&m->nbtilesX,&m->nbtilesY);
 	m->LARGEUR_TILE = m->tileset->w/m->nbtilesX;
 	m->HAUTEUR_TILE = m->tileset->h/m->nbtilesY;
-	m->props = malloc(m->nbtilesX*m->nbtilesY*sizeof(TileProp));
+	m->props = (TileProp*)malloc(m->nbtilesX*m->nbtilesY*sizeof(TileProp));
 	for(j=0,numtile=0;j<m->nbtilesY;j++)
 	{
 		for(i=0;i<m->nbtilesX;i++,numtile++)
@@ -42,8 +42,21 @@ void ChargerMap_tileset(FILE* F,Map* m)
 			m->props[numtile].R.y = j*m->HAUTEUR_TILE;
 			fscanf(F,"%s %s",buf,buf2);
 			m->props[numtile].mur = 0;
+			m->props[numtile].terre = 0;
 			if (strcmp(buf2,"mur")==0)
 				m->props[numtile].mur = 1;
+
+			if (strcmp(buf2,"terre")==0)
+				m->props[numtile].terre = 2;
+
+			if (strcmp(buf2,"huile")==0)
+				m->props[numtile].huile = 3;
+
+			if (strcmp(buf2,"accel")==0)
+				m->props[numtile].accel = 4;
+
+			if (strcmp(buf2,"arrivee")==0)
+				m->props[numtile].arrivee = 5;
 		}
 	}
 }
@@ -54,9 +67,9 @@ void ChargerMap_level(FILE* F,Map* m)
 	char buf[CACHE_SIZE];  // un buffer, petite mémoire cache
 	fscanf(F,"%s",buf); // #level
 	fscanf(F,"%d %d",&m->nbtiles_largeur_monde,&m->nbtiles_hauteur_monde);
-	m->schema = malloc(m->nbtiles_largeur_monde*sizeof(Uint16*));
+	m->schema = (Uint16**)malloc(m->nbtiles_largeur_monde*sizeof(Uint16*));
 	for(i=0;i<m->nbtiles_largeur_monde;i++)
-		m->schema[i] = malloc(m->nbtiles_hauteur_monde*sizeof(Uint16));
+		m->schema[i] = (Uint16*)malloc(m->nbtiles_hauteur_monde*sizeof(Uint16));
 	for(j=0;j<m->nbtiles_hauteur_monde;j++)
 	{
 		for(i=0;i<m->nbtiles_largeur_monde;i++)
@@ -87,7 +100,7 @@ Map* ChargerMap(const char* level,int largeur_fenetre,int hauteur_fenetre)
 		system("pause");
 		exit(-1);
 	}
-	m = malloc(sizeof(Map));
+	m = (Map*)malloc(sizeof(Map));
 	ChargerMap_tileset(F,m);
 	ChargerMap_level(F,m);
 	m->largeur_fenetre = largeur_fenetre;
@@ -136,13 +149,14 @@ int LibererMap(Map* m)
 	return 0;
 }
 
-int CollisionDecor(Map* carte,SDL_Rect* perso)
+int CollisionDecor(Map* carte, Sprite* sprite)
 {
-	int xmin,xmax,ymin,ymax,i,j,indicetile;
-	xmin = perso->x / carte->LARGEUR_TILE;
-	ymin = perso->y / carte->HAUTEUR_TILE;
-	xmax = (perso->x + perso->w -1) / carte->LARGEUR_TILE;
-	ymax = (perso->y + perso->h -1) / carte->HAUTEUR_TILE;
+        doubleCoord perso = sprite->position;
+	int xmin,xmax,ymin,ymax,i,j,indicetile,indicetile2;
+	xmin = perso.x / carte->LARGEUR_TILE;
+	ymin = perso.y / carte->HAUTEUR_TILE;
+	xmax = (perso.x + sprite->w) / carte->LARGEUR_TILE;
+	ymax = (perso.y + sprite->h) / carte->HAUTEUR_TILE;
 	if (xmin<0 || ymin<0 || xmax>=carte->nbtiles_largeur_monde || ymax>=carte->nbtiles_hauteur_monde)
 		return 1;
 	for(i=xmin;i<=xmax;i++)
@@ -150,10 +164,23 @@ int CollisionDecor(Map* carte,SDL_Rect* perso)
 		for(j=ymin;j<=ymax;j++)
 		{
 			indicetile = carte->schema[i][j];
-			if (carte->props[indicetile].mur)
-				return 1;
+			indicetile2 = carte->schema[i+3][j+3];
+			if (carte->props[indicetile].mur == 1 || carte->props[indicetile2].mur == 1)
+				return 3;
+			if (carte->props[indicetile].terre == 2)
+				return 2;
+
+			if (carte->props[indicetile].huile == 3)
+				return 4;
+
+			if (carte->props[indicetile].accel == 4)
+				return 5;
+
+			if (carte->props[indicetile].arrivee == 5)
+				return 6;
 		}
-	}
+       	}
+
 	return 0;
 }
 

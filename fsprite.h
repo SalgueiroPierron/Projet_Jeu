@@ -1,25 +1,19 @@
-#include "animat.h"
+#include <SDL/SDL.h>
 
-typedef enum 
-{
-	arret = 0,
-	marche,
-	saute,
-	baisse,
-	derape,
-	enumEtatLast
-} Status;
+typedef struct{
+  double x;
+  double y;
+}doubleCoord;
+
 
 typedef struct
 {
-   Status stat;
-   int sens;
-   Animation* anim;
-   int x,y;
+  doubleCoord position;
+  double w;
+  double h;
 } Sprite;
 
-Sprite* CreateSprite(int x,int y,Animation* An);
-void LibererSprite(Sprite*);
-void RenderSprite(Sprite* sp,SDL_Surface* screen);
-void MoveSprite(Sprite* sp,int vx,int vy,Status stat);
 
+Sprite InitialiserSprite(Sint16 x, Sint16 y, Sint16 w, Sint16 h);
+void LibereSprite(Sprite*);
+void AfficherSprite(Sprite* perso, SDL_Surface* screen, int rotation, SDL_Surface* karting1, SDL_Rect clip[16]);

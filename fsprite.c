@@ -1,33 +1,30 @@
-#include "fsprite.h"
+#include "main.h" 
 
-Sprite* CreateSprite(int x,int y,Animation* An)
-{
-	Sprite* sp = malloc(sizeof(Sprite));
-	sp->stat = arret;
-	sp->sens = 0;
-	sp->anim = An;
-	sp->x = x;
-	sp->y = y;
-	return sp;
-}
+#define SGN(X) (((X)==0)?(0):(((X)<0)?(-1):(1))) 
+#define ABS(X) ((((X)<0)?(-(X)):(X))) 
 
-void LibererSprite(Sprite* sp)
-{
-	free(sp);
-}
+Sprite InitialiserSprite(Sint16 x,Sint16 y,Sint16 w,Sint16 h) 
+{ 
+    Sprite* sp = (Sprite*)malloc(sizeof(Sprite)); 
+    sp->position.x = x; 
+    sp->position.y = y; 
+    sp->w = w; 
+    sp->h = h; 
+    return *sp; 
+} 
 
-void RenderSprite(Sprite* sp,SDL_Surface* screen)
-{
-	RenderAnimation(sp->anim,sp->sens,(int)sp->stat,screen,sp->x,sp->y);
-}
+void LibereSprite(Sprite* sp) 
+{ 
+    free(sp); 
+} 
 
-void MoveSprite(Sprite* sp,int vx,int vy,Status stat)
-{
-	sp->x+=vx;
-	sp->y+=vy;
-	if (vx<0)
-		sp->sens= 0 ;
-	if (vx>0)
-		sp->sens = 1;
-	sp->stat = stat;
+
+void AfficherSprite(Sprite* perso,SDL_Surface* screen, int rotation, SDL_Surface* karting1, SDL_Rect clip[16]){ 
+    SDL_Rect positionsurecran; 
+    positionsurecran.x = perso->position.x;
+    positionsurecran.y = perso->position.y;
+    positionsurecran.w = perso->w;
+    positionsurecran.h = perso->h;
+
+    apply_surface(positionsurecran.x, positionsurecran.y, karting1, screen, &clip[ rotation ]);
 }
